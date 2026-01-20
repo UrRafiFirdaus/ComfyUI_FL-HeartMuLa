@@ -257,16 +257,19 @@ def load_model(
             try:
                 print("[FL HeartMuLa] Applying torch.compile to model (first run will be slower)...")
                 # Compile the backbone and decoder for faster inference
-                # Using reduce-overhead mode for best inference performance
+                # Using default mode to avoid CUDA graph issues with cudaMallocAsync
+                # disable CUDA graphs which have issues with memory pool checks
                 pipeline.model.backbone = torch.compile(
                     pipeline.model.backbone,
-                    mode="reduce-overhead",
+                    mode="default",
                     fullgraph=False,
+                    options={"triton.cudagraphs": False},
                 )
                 pipeline.model.decoder = torch.compile(
                     pipeline.model.decoder,
-                    mode="reduce-overhead",
+                    mode="default",
                     fullgraph=False,
+                    options={"triton.cudagraphs": False},
                 )
                 compiled = True
                 print("[FL HeartMuLa] torch.compile applied successfully!")
