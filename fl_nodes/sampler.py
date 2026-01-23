@@ -131,6 +131,8 @@ class FL_HeartMuLa_Sampler:
         if torch.cuda.is_available():
             torch.cuda.manual_seed(seed)
             torch.cuda.manual_seed_all(seed)
+        if torch.backends.mps.is_available():
+            torch.mps.manual_seed(seed)
 
         print(f"\n{'='*60}")
         print(f"[FL HeartMuLa] Sampling Audio Tokens")
@@ -258,3 +260,5 @@ class FL_HeartMuLa_Sampler:
             gc.collect()
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
